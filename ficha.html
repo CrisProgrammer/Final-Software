@@ -1,0 +1,128 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ficha Médica</title>
+    
+  
+  </head>
+  <body>
+    <div class="container">
+
+      <h3>FICHA EMITIDA</H3>
+
+    <form action="">
+      <!-- Display patient's name -->
+      <label for="patientName">Nombre del Asegurado:</label>
+      <h5 id="patientName">
+    </h5>
+    
+      <!-- Display selected specialty -->
+      <label for="specialty">Especialidad:</label>
+      <input type="text" id="specialty" readonly /><br><br>
+
+      <!-- Display selected doctor -->
+      <label for="doctor">Médico:</label>
+      <input type="text" id="doctor" readonly /><br><br>
+
+      <!-- Display selected day -->
+      <label for="day">Día:</label>
+      <input type="text" id="day" readonly /><br><br>
+
+      <!-- Display additional information such as consultorio, dirección, turno, etc. -->
+      <label for="consultorio">Consultorio:</label>
+      <input type="text" id="consultorio" readonly /><br><br>
+
+      <label for="direccion">Dirección:</label>
+      <input type="text" id="direccion" readonly /><br><br>
+
+      <label for="turno">Turno:</label>
+      <input type="text" id="turno" readonly /><br><br>
+
+      <!-- Display selected presentation time -->
+      <label for="horaPresentacion">Hora de Presentación:</label>
+      <input type="text" id="horaPresentacion" readonly /><br><br>
+
+  
+      <label for="nroficha">Nro Ficha:</label>
+      <input type="text" id="nroficha" readonly /><br><br>
+
+      <button type="button" onclick="printFicha()">Imprimir</button>
+      <button type="button" onclick="goToIndex()">Salir</button>
+      <button type="button" onclick="confirm()">Confirmar</button>
+
+      </form>
+
+      <!-- Additional form elements or buttons can be added as needed -->
+    </div>
+
+    <script>
+      // Retrieve information from sessionStorage
+      const patientName = sessionStorage.getItem("patientName");
+      const patientCI = sessionStorage.getItem("patientCI");
+      const specialty = sessionStorage.getItem("especialidadElegida");
+      const doctor = sessionStorage.getItem("doctorElegido");
+      const day = sessionStorage.getItem("fechaElegida");
+      const consultorio = "2"; // Example: You can retrieve this from the server if needed
+      const direccion = "DTT0. 111 N 462 ESQ. LA PAZ"; // Example: You can retrieve this from the server if needed
+      const turno = "MAÑANA"; // Example: You can retrieve this from the server if needed
+      const horaPresentacion = sessionStorage.getItem("horaElegida");
+      const nroficha = sessionStorage.getItem("fichaElegida");
+
+      // Set values in the HTML document
+      document.getElementById("patientName").innerText = patientName;
+      document.getElementById("specialty").value = specialty;
+      document.getElementById("doctor").value = doctor;
+      document.getElementById("day").value = day;
+      document.getElementById("consultorio").value = consultorio;
+      document.getElementById("direccion").value = direccion;
+      document.getElementById("turno").value = turno;
+      document.getElementById("horaPresentacion").value = horaPresentacion;
+        document.getElementById("nroficha").value = nroficha;
+
+     // Function to trigger the print
+     function printFicha() {
+        window.print();
+      }
+
+      function goToIndex() {
+        window.location.href = "index.html";
+    }
+    function confirm() {
+      // Crear un objeto con los datos
+      let data = {
+          patientCI:patientCI,
+          specialty: specialty,
+          doctor: doctor,
+          day: day,
+          consultorio: consultorio,
+          direccion: direccion,
+          turno: turno,
+          horaPresentacion: horaPresentacion,
+          nroficha: nroficha
+      };
+      console.log(data);
+      // Enviar los datos a guadarFicha.php usando fetch
+      fetch('guardarFicha.php', {
+          method: 'POST', // Método de envío
+          headers: {
+              'Content-Type': 'application/json' // Tipo de contenido
+          },
+          body: JSON.stringify(data) // Convertir el objeto a JSON
+      })
+      .then(response => response.json()) // Parsear la respuesta como JSON
+      .then(result => {
+          console.log('Success:', result);
+          // Puedes agregar aquí la lógica para manejar la respuesta exitosa
+      })
+      .catch(error => {
+        console.log("llega a un error");
+          console.error('Error:', error);
+      });
+  }
+
+    </script>
+  </body>
+</html>
